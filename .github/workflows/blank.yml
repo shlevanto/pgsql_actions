@@ -55,6 +55,6 @@ jobs:
       - name: Find schema
         run: cat schema.sql
       - name: Read schema
-        run: psql -f schema.sql -p 5432 -U posrtgres_user postgres_db
+        run: psql -h postgres -f schema.sql -p 5432 -U posrtgres_user postgres_db
         env:
           PGPASSWORD: postgres_password
