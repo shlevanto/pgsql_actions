@@ -34,11 +34,11 @@ jobs:
           sudo apt-get install --yes postgresql-client
 
       - uses: actions/checkout@v2
+      - name: Find schema
+        run: cat schema.sql
 
 #      - name: Start client
 #        run: psql -h postgres -U postgres_user -d db_test
-      - name: Find schema
-        run: cat schema.sql
 #       psql command works, but database server is not running
 #      - name: Read schema
 #        run: psql -f schema.sql -p 5432 -U posrtgres_user db_test
