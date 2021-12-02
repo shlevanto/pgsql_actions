@@ -1,25 +1,34 @@
-name: CI
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
+# .github/workflows/postgres.yml
+on: push
 jobs:
-  build:
+  # label of the container job
+  postgres-job:
+    # containers must run in Linux based operating systems
     runs-on: ubuntu-latest
+    # Docker Hub image that `postgres-job` executes in
+    container: node:latest
 
+    # service containers to run with `postgres-job`
     services:
+      # label used to access the service container
       postgres:
+        # Docker Hub image
         image: postgres:latest
+        # service environment variables
+        # `POSTGRES_HOST` is `postgres`
         env:
-          POSTGRES_DB: db_test
+          # optional (defaults to `postgres`)
+          POSTGRES_DB: postgres_db
+          # required
           POSTGRES_PASSWORD: postgres_password
+          # optional (defaults to `5432`)
           POSTGRES_PORT: 5432
+          # optional (defaults to `postgres`)
           POSTGRES_USER: postgres_user
         ports:
+          # maps tcp port 5432 on service container to the host
           - 5432:5432
+        # set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -27,20 +36,15 @@ jobs:
           --health-retries 5
 
     steps:
-
       - name: Install PostgreSQL client
         run: |
-          sudo apt-get update
-          sudo apt-get install --yes postgresql-client
+          apt-get update
+          apt-get install --yes postgresql-client
 
-      - uses: actions/checkout@v2
-      - name: Find schema
-        run: cat schema.sql
-
-#      - name: Start client
-#        run: psql -h postgres -U postgres_user -d db_test
-#       psql command works, but database server is not running
-#      - name: Read schema
-#        run: psql -f schema.sql -p 5432 -U posrtgres_user db_test
-#        env:
-#          PGPASSWORD: postgres_password
+      # queries database with postgres client
+      - name: Query database
+        run: psql -h postgres -d postgres_db -U postgres_user -c 'SELECT 1;'
+        env:
+          # postgress password is required; alternatively, you can run:
+          # `PGPASSWORD=postgres_password psql ...`
+          PGPASSWORD: postgres_password
