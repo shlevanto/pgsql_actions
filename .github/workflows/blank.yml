@@ -75,13 +75,15 @@ jobs:
 #          Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
 #          chromedriver --version
           
-      - uses: actions/checkout@v2
+      - run: echo hello > world.txt
 
-      - run: | 
-          mkdir reports 
-          echo hello > reports/world.txt
-
-      - uses: actions/upload-artifact@v2
+      - name: Commit files
+        id: commit
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "github-actions"
+          git add report.html
+             git commit -m "Add changes" -a
+        uses: ad-m/github-push-action@master
         with:
-         name: my-artifact
-         path: reports/world.txt
+           github_token: ${{ secrets.GITHUB_TOKEN }}
