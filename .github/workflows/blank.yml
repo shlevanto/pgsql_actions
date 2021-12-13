@@ -80,6 +80,6 @@ jobs:
       - run: echo hello > world.txt
 
       - uses: actions/upload-artifact@v2
-        with:
-        name: my-artifact
-        path: ./world.txt
+          with:
+           name: my-artifact
+           path: ./world.txt
