@@ -1,0 +1,1 @@
+A dockerfile for running a container containing a PostgreSQL database. We used this for CI/CD automated testing with Github Actions. The database schema is read from a .sql file in the code repository.
